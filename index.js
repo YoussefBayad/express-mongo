@@ -2,12 +2,8 @@ import express from 'express';
 
 const app = express();
 
-app.listen(3000, () => {
-  console.log('hello express');
-});
+app.use(express.static('public'));
 
-app.get('/about', (req, res) => {
-  res.json({
-    name: 'Greg Lim',
-  });
+app.listen(4000, () => {
+  console.log('App listening on port 4000');
 });

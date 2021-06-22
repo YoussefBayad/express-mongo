@@ -68,6 +68,7 @@ app.post(
   redirectIfAuthenticatedMiddleware,
   loginUserController
 );
+app.use((req, res) => res.render('notfound'));
 
 // running the app
 

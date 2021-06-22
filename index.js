@@ -10,6 +10,8 @@ import homeController from './controllers/home.js';
 import postStoreController from './controllers/postStore.js';
 import newUserController from './controllers/newUser.js';
 import storeUserController from './controllers/storeUser.js';
+import loginController from './controllers/login.js';
+import loginUserController from './controllers/loginUser.js';
 import validationMiddleware from './controllers/middleware/validationMiddleware.js';
 
 const app = express();
@@ -33,7 +35,9 @@ app.get('/posts/new', newPostController);
 app.post('/posts/store', postStoreController);
 app.get('/post/:id', postController);
 app.get('/auth/register', newUserController);
+app.get('/auth/login', loginController);
 app.post('/users/register', storeUserController);
+app.post('/users/login', loginUserController);
 
 app.listen(4000, () => {
   console.log('App listening on port 4000');

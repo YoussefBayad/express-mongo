@@ -13,6 +13,7 @@ export default (req, res) => {
       await BlogPost.create({
         ...req.body,
         image: '/assets/img/' + image.name,
+        userId: req.session.userId,
       });
       res.redirect('/');
     }

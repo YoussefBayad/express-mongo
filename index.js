@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 import ejs from 'ejs';
 import BlogPost from './models/BlogPost.js';
-import bodyParser from 'body-parser';
+import fileUpload from 'express-fileupload';
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -13,6 +13,7 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 // parse application/json
 app.use(express.json());
+app.use(fileUpload());
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -46,10 +47,15 @@ app.get('/posts/new', (req, res) => {
   res.render('create');
 });
 
-app.post('/posts/store', async (req, res) => {
-  // model creates a new doc with browser data
-  await BlogPost.create(req.body);
-  res.redirect('/');
+app.post('/posts/store', (req, res) => {
+  let image = req.files.image;
+  image.mv(
+    path.resolve(__dirname, 'public/assets/img', image.name),
+    async (error) => {
+      await BlogPost.create(req.body);
+      res.redirect('/');
+    }
+  );
 });
 
 app.get('/post/:id', async (req, res) => {

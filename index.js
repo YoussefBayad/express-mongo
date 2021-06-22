@@ -8,6 +8,8 @@ import contactsController from './controllers/contacts.js';
 import postController from './controllers/post.js';
 import homeController from './controllers/home.js';
 import postStoreController from './controllers/postStore.js';
+import newUserController from './controllers/newUser.js';
+import storeUserController from './controllers/storeUser.js';
 import validationMiddleware from './controllers/middleware/validationMiddleware.js';
 
 const app = express();
@@ -30,6 +32,8 @@ app.get('/contact', contactsController);
 app.get('/posts/new', newPostController);
 app.post('/posts/store', postStoreController);
 app.get('/post/:id', postController);
+app.get('/auth/register', newUserController);
+app.post('/users/register', storeUserController);
 
 app.listen(4000, () => {
   console.log('App listening on port 4000');

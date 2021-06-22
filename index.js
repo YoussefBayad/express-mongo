@@ -1,10 +1,13 @@
 import express from 'express';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 import ejs from 'ejs';
-import BlogPost from './models/BlogPost.js';
 import fileUpload from 'express-fileupload';
+import newPostController from './controllers/newPost.js';
+import aboutController from './controllers/about.js';
+import contactsController from './controllers/contacts.js';
+import postController from './controllers/post.js';
+import homeController from './controllers/home.js';
+import postStoreController from './controllers/postStore.js';
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -25,56 +28,17 @@ const validateMiddleWare = (req, res, next) => {
 
 app.use('/posts/store', validateMiddleWare);
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 mongoose.connect('mongodb://localhost/my_database', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-app.get('/', async (req, res) => {
-  const blogposts = await BlogPost.find({});
-  res.render('index', {
-    blogposts,
-  });
-});
-
-app.get('/about', (req, res) => {
-  res.render('about');
-});
-app.get('/contact', (req, res) => {
-  res.render('contact');
-});
-
-app.get('/post', (req, res) => {
-  res.render('post');
-});
-
-app.get('/posts/new', (req, res) => {
-  res.render('create');
-});
-
-app.post('/posts/store', (req, res) => {
-  let image = req.files.image;
-  image.mv(
-    path.resolve(__dirname, 'public/assets/img', image.name),
-    async (error) => {
-      await BlogPost.create({
-        ...req.body,
-        image: '/assets/img/' + image.name,
-      });
-      res.redirect('/');
-    }
-  );
-});
-
-app.get('/post/:id', async (req, res) => {
-  const blogpost = await BlogPost.findById(req.params.id);
-  res.render('post', {
-    blogpost,
-  });
-});
+app.get('/', homeController);
+app.get('/about', aboutController);
+app.get('/contact', contactsController);
+app.get('/posts/new', newPostController);
+app.post('/posts/store', postStoreController);
+app.get('/post/:id', postController);
 
 app.listen(4000, () => {
   console.log('App listening on port 4000');

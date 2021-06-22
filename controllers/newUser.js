@@ -1,5 +1,6 @@
+import flash from 'connect-flash';
 export default (req, res) => {
   res.render('register', {
-    errors: req.session.validationErrors,
+    errors: req.flash('validationErrors'),
   });
 };

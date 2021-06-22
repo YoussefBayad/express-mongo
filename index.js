@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import ejs from 'ejs';
 import fileUpload from 'express-fileupload';
 import expressSession from 'express-session';
+import flash from 'connect-flash';
 
 // Controllers
 import newPostController from './controllers/newPost.js';
@@ -35,6 +36,7 @@ app.use(
     secret: 'keyboard cat',
   })
 );
+app.use(flash());
 
 global.loggedIn = null;
 app.use('*', (req, res, next) => {

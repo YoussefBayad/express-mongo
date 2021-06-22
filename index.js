@@ -24,8 +24,11 @@ mongoose.connect('mongodb://localhost/my_database', {
 
 app.use(express.static('public'));
 
-app.get('/', (req, res) => {
-  res.render('index');
+app.get('/', async (req, res) => {
+  const blogposts = await BlogPost.find({});
+  res.render('index', {
+    blogposts,
+  });
 });
 
 app.get('/about', (req, res) => {
@@ -45,9 +48,15 @@ app.get('/posts/new', (req, res) => {
 
 app.post('/posts/store', async (req, res) => {
   // model creates a new doc with browser data
-
   await BlogPost.create(req.body);
   res.redirect('/');
+});
+
+app.get('/post/:id', async (req, res) => {
+  const blogpost = await BlogPost.findById(req.params.id);
+  res.render('post', {
+    blogpost,
+  });
 });
 
 app.listen(4000, () => {

@@ -8,6 +8,8 @@ export default (req, res) => {
         (key) => error.errors[key].message
       );
       req.flash('validationErrors', validationErrors);
+      req.flash('data', req.body);
+
       return res.redirect('/auth/register');
     }
     req.session.userId = user._id;

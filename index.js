@@ -2,6 +2,9 @@ import express from 'express';
 import mongoose from 'mongoose';
 import ejs from 'ejs';
 import fileUpload from 'express-fileupload';
+import expressSession from 'express-session';
+
+// Controllers
 import newPostController from './controllers/newPost.js';
 import aboutController from './controllers/about.js';
 import contactsController from './controllers/contacts.js';
@@ -12,10 +15,12 @@ import newUserController from './controllers/newUser.js';
 import storeUserController from './controllers/storeUser.js';
 import loginController from './controllers/login.js';
 import loginUserController from './controllers/loginUser.js';
+import logoutController from './controllers/logout.js';
+
+// Midllewares
 import validationMiddleware from './middleware/validationMiddleware.js';
 import authMiddleware from './middleware/authMiddleware.js';
 import redirectIfAuthenticatedMiddleware from './middleware/redirectIfAuthenticatedMiddleware.js';
-import expressSession from 'express-session';
 
 const app = express();
 
@@ -37,11 +42,13 @@ app.use('*', (req, res, next) => {
   next();
 });
 
+// db connection
 mongoose.connect('mongodb://localhost/my_database', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
+// Routes
 app.get('/', homeController);
 app.get('/about', aboutController);
 app.get('/contact', contactsController);
@@ -50,6 +57,7 @@ app.post('/posts/store', authMiddleware, postStoreController);
 app.get('/post/:id', postController);
 app.get('/auth/register', redirectIfAuthenticatedMiddleware, newUserController);
 app.get('/auth/login', redirectIfAuthenticatedMiddleware, loginController);
+app.get('/auth/logout', logoutController);
 app.post(
   '/users/register',
   redirectIfAuthenticatedMiddleware,
@@ -60,6 +68,8 @@ app.post(
   redirectIfAuthenticatedMiddleware,
   loginUserController
 );
+
+// running the app
 
 app.listen(4000, () => {
   console.log('App listening on port 4000');

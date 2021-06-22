@@ -52,7 +52,10 @@ app.post('/posts/store', (req, res) => {
   image.mv(
     path.resolve(__dirname, 'public/assets/img', image.name),
     async (error) => {
-      await BlogPost.create(req.body);
+      await BlogPost.create({
+        ...req.body,
+        image: '/assets/img/' + image.name,
+      });
       res.redirect('/');
     }
   );

@@ -1,3 +1,5 @@
 export default (req, res) => {
-  res.render('register');
+  res.render('register', {
+    errors: req.session.validationErrors,
+  });
 };

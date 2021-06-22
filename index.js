@@ -8,25 +8,16 @@ import contactsController from './controllers/contacts.js';
 import postController from './controllers/post.js';
 import homeController from './controllers/home.js';
 import postStoreController from './controllers/postStore.js';
+import validationMiddleware from './controllers/middleware/validationMiddleware.js';
 
 const app = express();
+
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
-
-// parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
-// parse application/json
 app.use(express.json());
 app.use(fileUpload());
-
-const validateMiddleWare = (req, res, next) => {
-  if (req.files == null || req.body.title == null || req.body.body == null) {
-    return res.redirect('/posts/new');
-  }
-  next();
-};
-
-app.use('/posts/store', validateMiddleWare);
+app.use('/posts/store', validationMiddleware);
 
 mongoose.connect('mongodb://localhost/my_database', {
   useNewUrlParser: true,

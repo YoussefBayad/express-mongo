@@ -8,12 +8,22 @@ import fileUpload from 'express-fileupload';
 
 const app = express();
 app.set('view engine', 'ejs');
+app.use(express.static('public'));
 
 // parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 // parse application/json
 app.use(express.json());
 app.use(fileUpload());
+
+const validateMiddleWare = (req, res, next) => {
+  if (req.files == null || req.body.title == null || req.body.body == null) {
+    return res.redirect('/posts/new');
+  }
+  next();
+};
+
+app.use('/posts/store', validateMiddleWare);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,8 +32,6 @@ mongoose.connect('mongodb://localhost/my_database', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
-app.use(express.static('public'));
 
 app.get('/', async (req, res) => {
   const blogposts = await BlogPost.find({});

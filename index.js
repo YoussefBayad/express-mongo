@@ -74,6 +74,10 @@ app.use((req, res) => res.render('notfound'));
 
 // running the app
 
-app.listen(4000, () => {
+let port = process.env.PORT;
+if (port == null || port == '') {
+  port = 4000;
+}
+app.listen(port, () => {
   console.log('App listening on port 4000');
 });
